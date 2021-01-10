@@ -1,4 +1,4 @@
-baseURL = "http://brinst07.github.io"
+baseURL = "https://brinst07.github.io/"
 title = "brinst Dev blog"
 theme = "zzo"
 

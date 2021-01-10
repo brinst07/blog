@@ -1,4 +1,4 @@
-logoText = "Zzo"
+logoText = "brinst Dev Blog"
 logoType = "short" # long, short
 description = "The Zzo theme for Hugo example site."
 custom_css = []
@@ -62,7 +62,7 @@ whoami = "Web Developer && App Developer"
 bioImageUrl = ""
 useGravatar = false
 location = "Seoul, Korea"
-organization = "Hugo"
+organization = "Kaoni"
 link = "https://github.com/brinst07"
 
 # sidebar
