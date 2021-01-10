@@ -1,0 +1,7 @@
+[submodule "themes/zzo"]
+	path = themes/zzo
+	url = https://github.com/zzossig/hugo-theme-zzo.git
+[submodule "public"]
+	path = public
+	url = https://github.com/brinst07/brinst07.github.io
+	branch = master
