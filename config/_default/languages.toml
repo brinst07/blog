@@ -6,7 +6,7 @@
   contentdir = "content/en"
 
 [ko]
-  title = "Hugo Zzo Theme"
+  title = "brinst Dev Blog"
   languageName = "한국어"
   weight = 1
   languagedir = "ltr"
