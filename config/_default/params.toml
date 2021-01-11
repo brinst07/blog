@@ -1,6 +1,6 @@
 logoText = "brinst Dev Blog"
 logoType = "short" # long, short
-description = "The Zzo theme for Hugo example site."
+description = "brinst Dev Blog"
 custom_css = []
 custom_js = []
 useFaviconGenerator = true # https://www.favicon-generator.org/
@@ -77,10 +77,10 @@ enableListSidebarTitles = true
 enableToc = true
 hideToc = false
 tocFolding = true
-tocPosition = "inner" # inner, outer
+tocPosition = "outer" # inner, outer
 enableTocSwitch = true
 itemsPerCategory = 5
-sidebarPosition = "right"
+sidebarPosition = "left"
 tocLevels = ["h2", "h3", "h4"]
 enableSidebarPostsByOrder = false
 
@@ -94,7 +94,7 @@ enableThemeChange = true
 # service
 googleTagManager = "" # GTM-XXXXXX
 baiduAnalytics = ""
-enableBusuanzi = false
+enableBusuanzi = true
 busuanziSiteUV = true
 busuanziSitePV = true
 busuanziPagePV = true

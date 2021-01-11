@@ -25,9 +25,9 @@ header:
     paddingY: 0
     align: center
     title:
-      - HUGO
+      - brinst Dev Blog
     subtitle:
-      - The world’s fastest framework for building websites
+      - slow & steady
     titleColor: 
     titleShadow: true
     titleFontSize: 44
