@@ -80,7 +80,7 @@ tocFolding = true
 tocPosition = "outer" # inner, outer
 enableTocSwitch = true
 itemsPerCategory = 5
-sidebarPosition = "left"
+sidebarPosition = "right"
 tocLevels = ["h2", "h3", "h4"]
 enableSidebarPostsByOrder = false
 
