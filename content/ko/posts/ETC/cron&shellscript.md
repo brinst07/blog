@@ -1,6 +1,6 @@
 ---
 author: "brinst"
-title: "cron"
+title: "cron 과 shellscript"
 date: 2021-01-14T22:39:24+09:00
 draft: false
 ---
@@ -90,3 +90,155 @@ cron 데몬은 시스템 스케줄러 정보뿐만 아니라 각각 사용자가
 
 ## CronMaker 참고 사이트
 http://www.cronmaker.com/;jsessionid=node068maia8exxmw1ia839g15hrpk46275.node0?0
+
+---
+## Shell Script
+* 스크립트 : 텍스트 형식으로 저장되는 프로그램으로서 한줄씩 순차적으로 읽어 실행되도록 작성된 프로그램
+    * 일반적으로 인터프리트 방식으로 동작하는 컴파일되지 않은 프로그램
+* Shell Script : 운영체제의 쉘 즉 bash, ksh, csh 등이 읽어 실행해주는 스크립트 언어
+
+### 환경
+* Linux 기반 시스템
+* Bash shell(/bin/bash)
+
+### 작성방법
+```shell
+#!/bin/bash
+
+하단에 스크립트를 작성한다.
+```
+
+### 쉘 스크립트 실행방법
+```
+./shell_test.sh
+```
+
+### 기본 문법
+* 출력
+    ```shell
+    #! /bin/bash
+
+    echo "hello~ script"
+    ```
+위 쉘 스크립트를 실행하면 hello script 한줄을 실행한다.
+
+* 주석 : #
+* 변수선언
+    * =를 이용하여 선언하고 $를 이용해서 사용
+    * =는 공백없이 붙여써야한다.
+    * 지역변수에는 local을 붙인다.
+    * ""로 감싸서 사용하면 더 안전하다. 문자열에 공백도 포함해서 값을 이용 할 수 있기 때문에
+    ```shell
+        #!/bin/bash
+
+        # 변수 선언
+        test="abc"
+        num=100
+
+        #변수 사용하기 및 출력
+        echo ${test}
+        echo ${num}
+        echo "${test}"
+        echo "${num}"
+
+        #지역변수
+        local local_var="local var"
+
+        #변수가 선언되지 않았을 때 기본값을 지정하며 사용하는 방법
+        defalut_var=${default_var="temp"}
+
+    ```
+
+* 배열
+    * 배열의 인덱스는 0부터 시작함
+    * 배열이름[@]는 배열의 모든 원소를 의미한다.
+    * 배열의 원소 추가 시는 += 연산자를 사용한다.
+    * 배열에서 원소를 삭제시
+        * /를 사용해 해당 문자열 부분이 있으면 삭제, 삭제하고자 하는 문자나 문자열이 포함되어 있는 부분을 삭제
+        * unset을 이용해 삭제
+    ```shell
+        #!/bin/bash
+
+        arr_test=("1","2")
+        echo "${arr_test[1]}"
+
+        echo "${arr_test[@]}"
+
+        arr_test+=("3","4")
+
+        remove_element=(3)
+
+        arr_test=("${arr_test[@]/$remove_element}")
+
+        for i in ${!arr_test[@]}; do
+	        if [ ${arr_test[i]} = ${remove_element} ]; then
+		    # Use unset
+		    unset arr_test[i]
+	    fi
+        done
+    ```
+    
+* 조건문
+    * if[조건]; then... elif[조건]; then...else 를 사용한다.
+    ```shell
+        #!/bin/bash
+
+        # Numeric if statement
+        test_num=5
+
+        if [ "${test_num}" -eq 2 ]; then
+            echo "number is 2"
+        elif [ "${test_num}" -eq 3 ]; then
+            echo "number is 3"
+        else
+            echo "number is not 2 or 3"
+        fi
+
+        # Numeric if statement
+        test_num=5
+
+        if (( ${test_num} > 3 )); then
+            echo "number is greater than 3"
+        else
+            echo "number is not greater than 3"
+        fi
+
+        # String if statement
+        test_str="test"
+
+        if [ "${test_str}" = "test" ]; then
+            echo "test_str is test"
+        else
+            echo "test_str is not test"
+        fi
+    ```
+
+* 반복문
+    * while 문의 사용
+    ```shell
+        #!/bin/bash
+
+        cnt=0
+        while (( "${cnt}" < 5 )); do
+            echo "${cnt}"
+            (( cnt = "${cnt}" + 1 )) # 숫자와 변수의 연산은 (())가 필요합니다.
+        done
+    ```
+
+* for문의 사용법
+    ```shell
+        #!/bin/bash
+
+        arr_num=(1 2 3 4 5 6 7)
+
+        # 배열에 @는 모든 원소를 뜻합니다.
+        for i in ${arr_num[@]}; do
+            printf $i
+        done
+        echo
+
+        for (( i = 0; i < 10; i++)); do
+            printf $i
+        done
+        echo
+    ```
