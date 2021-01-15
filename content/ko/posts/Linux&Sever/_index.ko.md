@@ -1,6 +1,6 @@
 ---
 aliases : ["posts","articles","blog","showcase","docs"]
-title : "LINUX&Server"
+title : "Linux&Server"
 author : "brinst"
 tags : ["index"]
 description : "Linux&Server"

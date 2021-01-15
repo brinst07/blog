@@ -111,6 +111,8 @@ http://www.cronmaker.com/;jsessionid=node068maia8exxmw1ia839g15hrpk46275.node0?0
 ### 쉘 스크립트 실행방법
 ```
 ./shell_test.sh
+
+sh shell_test.sh
 ```
 
 ### 기본 문법
@@ -242,3 +244,50 @@ http://www.cronmaker.com/;jsessionid=node068maia8exxmw1ia839g15hrpk46275.node0?0
         done
         echo
     ```
+
+#### 쉘스크립트 활용
+github 블로그를 만들게 되면 submodule과 blog repository에 둘다 commit을 해야만이 정상적으로 블로그에 연동되는 것을 확인할 수 있다.
+하지만 add -> commit -> message 작성 -> push 이 작업을 두번이나 해주는 것이 매우 번거롭다.
+따라서 이러한 작업을 쉘 스크립트를 사용하여 간단히 처리할 수 있다.
+
+```shell
+#!/bin/bash
+
+echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
+
+# Build the project.
+hugo -t zzo
+
+# Go To Public folder
+cd public
+# Add changes to git.
+git add .
+
+# Commit changes.
+msg="rebuilding site `date`"
+if [ $# -eq 1 ]
+  then msg="$1"
+fi
+git commit -m "$msg"
+
+# Push source and build repos.
+git push origin master
+
+# Come Back up to the Project Root
+cd ..
+
+
+# blog 저장소 Commit & Push
+git add .
+
+msg="rebuilding site `date`"
+if [ $# -eq 1 ]
+  then msg="$1"
+fi
+git commit -m "$msg"
+
+git push origin master
+
+```
+위 쉘스크립트 코드를 보면 우리가 실제로 사용하는 git 명령어인 것을 확인 할 수 있다.
+따라서 쉘 스크립트와 cron을 사용하면 훨씬더 편하게 작업할 수 있는 것을 알 수 있다.
