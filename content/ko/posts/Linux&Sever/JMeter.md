@@ -111,3 +111,19 @@ $(위치)jmeter.sh -n -t (jmx파일위치) -j (output위치)/output/run.log -l (
 이 명령어를 수행하게 되면 jmeter.sh로 jmx을 실행하여 output파일들을 생성하게 됩니다.
 
 result 파일들을 보며 테스트 결과를 확인할 수 있다.
+
+Jmeter로 테스트를 할 때 dstat을 사용하면 cpu나 메모리등 하드웨어 부하에 대한 수치를 쉽게 살펴 볼수 있다.
+
+#### dstat
+1. 설치
+`yum install dstat`
+
+2. 사용<br>
+`dstst`을 옵션없이 실행하면 -cdngy 옵션을 준것과 동일하며, CPU,disk,network,paging,system 정보를 갱신하며 보여준다.
+
+3. 로그파일 파일로 저장<br>
+`dstat --output dstat-log.csv -cdnpmrt`<Br>
+
+
+먼저 dstat을 실행한 뒤에 run을 실행하여 jmeter로 result 파일으로는 응답속도를 테스트하고, dstat으로 하드웨어 부하량에 대하여 알아볼수 있다.
+
