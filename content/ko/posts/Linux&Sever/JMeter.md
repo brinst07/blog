@@ -44,7 +44,7 @@ Thread Group이란, JMeter에서 다양한 하위 Element 항목들을 제어하
 ![image](https://user-images.githubusercontent.com/60083557/105463902-1203e780-5cd4-11eb-8dff-2f928991001b.png)
 
 다른 항목들은 한글로 해석되어 있기에 ramp up 시간만 간단하게 설명하자면 쓰레드들을 실행시키기 위한 시간을 의미한다고 한다.
-만약 쓰레드를 30개 주고 ramp-up을 120초를 준다고 하면, 각 1초에 4개꼴로 테스트를 진행할 수 있다.
+만약 쓰레드를 30개 주고 ramp-up을 120초를 준다고 하면, 각 1개의 쓰레드가 4초 간격으로 동작한다.
 
 #### Loop Count
 한 Thread 당 sampler로 있는 테스트 시나리오를 몇 번 돌릴지를 설정
