@@ -135,3 +135,12 @@ Sprin Date JPA에는 여러 종류의 인터페이스의 기능을 통해서 JPA
   - update 작업 : save(엔티티 객체)
   - delete 작업 : deleteById(키 타입), delete(엔티티 객체)
   - save -> JPA의 구현체가 메모리상에서 객체를 비교하고 없다면 insert, 존재한다면 update를 동작시키는 방식으로 동작
+
+#### 데이터베이스 방언(dialect)
+
+- JPA는 특정 데이터베이스에 종속적이지 않은 기술
+- 각각의 데이터베이스가 제공하는 SQL 문법과 함수는 조금씩 다르디
+  - 가변 문자 : MySQL은 VARCHAR, ORACLE은 VARCHAR2
+  - 문자열을 자르는 함수 : SQL표준은 SUBSTRING(), ORACLE은 SUBSTR()
+  - 페이징 : MySQL은 LIMIT, ORACLE은 ROWNUM
+- 방언 : SQL 표준을 지키지 않거나 특정 데이터베이스만의 고유한 기능
