@@ -144,3 +144,5 @@ Sprin Date JPA에는 여러 종류의 인터페이스의 기능을 통해서 JPA
   - 문자열을 자르는 함수 : SQL표준은 SUBSTRING(), ORACLE은 SUBSTR()
   - 페이징 : MySQL은 LIMIT, ORACLE은 ROWNUM
 - 방언 : SQL 표준을 지키지 않거나 특정 데이터베이스만의 고유한 기능
+
+* JPA를 사용하게 되면 방언이 존재하기 때문에 ORACLE -> MYSQL 이나 그반대로 전환이 엄청 빠르다...

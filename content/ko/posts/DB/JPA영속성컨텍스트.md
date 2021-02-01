@@ -70,18 +70,23 @@ draft: false
 ## 엔티티의 생명주기
 
 - 비영속
+
   - 영속성 컨텍스트와 전혀 관계가 없는 상태
+
   ```
       //객체를 생성한 상태 (비영속)
       Member member = new Member();
       member.setId("member1);
       member.setUsername("회원1")
   ```
+
 - 영속
+
   - 영속성 컨텍스트에 저장된 상태
   - 엔티티가 영속성 컨텍스트에 의해 관리된다.
   - 이때 DB에 저장 되지 않는다. 영속 상태가 된다고 DB에 쿼리가 날아가지 않는다.
   - 트랜잭션의 커밋 시점에 영속성 컨텍스트에 있는 정보들이 DB에 쿼리로 날아간다.
+
   ```
     // 객체를 생성한 상태 (비영속)
       Member member = new Member();
@@ -92,13 +97,23 @@ draft: false
       // 객체를 저장한 상태 (영속)
       entityManager.persist(member);
   ```
+
   - EntityManager.persist(entity)
     - 영속상태가 된다고 바로 DB에 쿼리가 날아가지 않는다. (즉, DB 저장 X)
   - transaction.commit()
     - 트랜잭션의 commit 시점에 영속성 컨텍스트에 있는 정보들이 DB에 쿼리로 날아간다.
+
 - 준영속
   - 영속성 컨텍스트에 저장되었다가 분리된 상태
   - 영속성 컨텍스트에서 지운 상태
+  - 영속성 컨텍스트가 제공하는 기능을 사용 못함.
+  - 준영속 상태로 만드는 방법
+    - em.detach(entity)<br>
+      특정 엔티티만 준영속 상태로 전환
+    - em.clear()<br>
+      영속성 컨텍스트를 완전히 초기화
+    - em.close()<br>
+      영속성 컨텍스트를 종료
   ```
       //회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
       entityManger.detach(member);
@@ -291,3 +306,12 @@ List<Member> members = query.getResultList();
   - 조회가 되지 않는다.
   - DB에 Query로도 날아가야 반영이 될텐데 INSERT Query 자체가 날아가지 않은 상태이다.
   - 이 때문에 JPA의 기본모드는 JPQL 쿼리 실행시 flush()를 자동으로 날린다. -> JPQL 쿼리 실행시 플러시 자동 호출로 인해 위 코드는 조회가 가능하다.
+
+## 프록시와 즉시로딩 주의
+
+- 가급적 지연 로딩을 사용
+- 즉시 로딩을 적용하면 예상하지 못한 SQL이 발생
+- 즉시 로딩은 JPQL에서 N+1 문제를 일으킨다.
+- @ManyToOne, @OneToOne은 기본이 즉시 로딩
+  -> LAZY로 설정
+- @OneToMany, @ManyToMany는 기본이 지연 로딩
