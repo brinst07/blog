@@ -21,5 +21,3 @@ draft: false
 
 - JpaRepository 인터페이스 : 공통 CRUD 제공
 - 제너릭은 <엔티티, 식별자>로 설정
-
-###
