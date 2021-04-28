@@ -11,7 +11,7 @@ draft: false
 
 ## 리액트 변경 과정
 
-1. JSX을 렌더일한다. → Virtual dom이 업데이트가 됨
+1. JSX을 렌더링한다. → Virtual dom이 업데이트가 됨
 2. Virtual Dom이 이전 Virtual Dom에서 찍어둔 Snapshot과 비교를 해서 바뀐부분을 찾는다.
 3. Virtual Dom이 이전 virtualDOM 에서 찍어둔 Snapshot과 비교를해서 바뀐부분을 찾는다.
    이 과정을 diffing이라고 부름
