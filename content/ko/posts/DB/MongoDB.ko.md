@@ -165,3 +165,4 @@ Product.remove({})
 //해당하는 이름의 도큐먼트만 지워짐
 Product.remove({name : 'zedd'})
 ```
+
