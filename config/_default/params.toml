@@ -58,11 +58,11 @@ typeIcon = "🎯"
 # whoami
 myname = "brinst"
 email = "brinst07@gmail.com"
-whoami = "Web Developer && App Developer"
+whoami = "Backend Developer"
 bioImageUrl = ""
 useGravatar = false
 location = "Seoul, Korea"
-organization = "Kaoni"
+organization = "Xiilab"
 link = "https://github.com/brinst07"
 
 # sidebar
