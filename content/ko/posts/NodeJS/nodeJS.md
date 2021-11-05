@@ -34,6 +34,9 @@ npm install express --save
 정상적으로 완료되면 package.json의 dependencies에 express가 추가된것을 확인할수 있을것이다.
 또한 node_modules폴더도 생겼을 것이다.
 
+### nestjs 설치하기
+
+
 ### 서버켜보기
 
 프로젝트 폴더에 index.js를 만들어준다.
