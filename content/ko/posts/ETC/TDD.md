@@ -19,7 +19,7 @@ TDD란 Test Driven Development의 약자로 '테스트 주도 개발'이라고 �
 순수 코드를 개발하는 데는 시간이 적게 들어갈 수도 있지만, 이 에러를 잡기 위해 디버깅하는 시간 
 그리고 에러를 해결하기 위해 다시 코딩하는 시간 또한 많이 소요되고 있다.
 반면 TDD는 다음과 같이 진행된다.
-단위테스트 -> 개발 -> 통합테스트
+<b>단위테스트 -> 개발 -> 통합테스트</b>
 기존에 방식대로 개발했던 나를 포함한 개발자들은 상당히 이질감이 들 것이다.
 테스트 짜는 시간에 코드를 잘 설계해서 짜면 끝날 일을 왜 두세번 하지?? 이렇게 생각할 수도 있다.
 하지만 조금 깊게 생각해보면, 테스트 코드를 미리 짜두게 되면 발생하는 에러에 대해서 조금더 유연하게 대처할수 있고,
@@ -38,6 +38,14 @@ Mock function을 사용하는 이유는 다음과 같다.
 함수들 사이안에 의존성이 있는 함수가 존재하게 된다면, 해당 함수를 테스트하는데 문제가 발생할 것이다.
 이런상황일때는 테스트 어렵게 된다.
 그러므로 의존성 있는 함수를 Mock 함수로 선언하고 정상적으로 돌아간다는 가정하게 테스트를 진행하는 것이다.
+
+## 비동기관련...
+위 강의를 듣고, TDD에서 비동기로 mockReturnValue에 에러값을 정해주는 방법에 대해서 간단히 기술한다.
+비동기 요청이 오고 성공을 하게 되면 resolve 메소드가 실행이 되고 then 메소드를 통해서 처리가 가능하다
+만약 실패를 하게 된다면 reject 메소드가 실행이 된다.
+따라서 Promise.reject(value)를 mockReturnValue() 안에 넣어주면 비동기 에러 상황을 만들어 줄수 있다.
+
+[comment]: <> (![image]&#40;"/images/content/promise.png"&#41;)
 
 ## 테스트 코드 작성하기
 테스트 코드는 다음과 같이 작성한다.
@@ -187,6 +195,70 @@ describe('Product Controller Update',() => {
         await productController.updateProduct(req,res,next);
         expect(productModel.findByIdAndUpdate).toHaveBeenCalledWith(productId,{name:"updated name"},{new : true})
     })
+
+    it('should return json body and response code 200', async function () {
+        req.params.productId = productId;
+        req.body = {name:"updated name",description: "updated description"};
+        productModel.findByIdAndUpdate.mockReturnValue({name:"updated name",description: "updated description"})
+        await productController.updateProduct(req,res,next);
+        expect(res._isEndCalled()).toBeTruthy();
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual({name:"updated name",description: "updated description"});
+    });
+
+    it('should handle 404 when item doesnt exist',async function () {
+        productModel.findByIdAndUpdate.mockReturnValue(null);
+        await productController.updateProduct(req,res,next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+
+    it('should handle errors',async function () {
+        const errorMessage = {"message" : "error"};
+        const rejectPromise = Promise.reject(errorMessage);
+        productModel.findByIdAndUpdate.mockReturnValue(rejectPromise);
+        await productController.updateProduct(req,res,next);
+        expect(next).toHaveBeenCalledWith(errorMessage);
+    });
+})
+
+describe('Product Controller Delete', () => {
+    it('should have a delete product funciton', function () {
+        expect(typeof productController.deleteProduct).toBe("function");
+    });
+
+    it('should call productmodel.findByIdAndDelete',async function () {
+        req.params.productId = productId;
+        await productController.deleteProduct(req);
+        expect(productModel.findByIdAndDelete).toBeCalledWith(productId);
+    });
+
+    it('should return 200 response', async function () {
+        let deletedProduct = {
+            name : "deleteProduct",
+            description:  "test"
+        }
+        productModel.findByIdAndDelete.mockReturnValue(deletedProduct);
+        await productController.deleteProduct(req,res,next);
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(deletedProduct);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+
+    it('should handle 404 when item doesnt exist', async function () {
+        productModel.findByIdAndDelete.mockReturnValue(null);
+        await productController.deleteProduct(req,res,next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+
+    it('should handle errors', async function () {
+        const errorMessage = {message : "Error deleting"}
+        const rejectPromise = Promise.reject(errorMessage);
+        productModel.findByIdAndDelete.mockReturnValue(rejectPromise);
+        await productController.deleteProduct(req,res,next);
+        expect(next).toHaveBeenCalledWith(errorMessage);
+    });
 })
 ```
 
@@ -251,5 +323,34 @@ it('GET id doesnt exist /api/products/:productId', async function () {
     //id값을 많이 바꾸면 mongodb자체에서 없는 id값이라고 404를 주기때문에 살짝만 바꿔줘야함
     const response = await request(app).get('/api/products/618761fd1f12be2fe466a211')
     expect(response.statusCode).toBe(404)
+});
+
+it("PUT /api/products", async () => {
+    const res = await request(app)
+        .put(`/api/products/${productId}`)
+        .send({name : "updated name", description : "updated description"});
+    expect(res.statusCode).toBe(200)
+    expect(res.body.name).toBe("updated name");
+})
+
+it('should return 404 on PUT /api/products', async function () {
+    const res = await request(app)
+        .put(`/api/products/618761fd1febbe2fe466a312`)
+        .send({name : "updated name", description : "updated description"});
+    expect(res.statusCode).toBe(404)
+});
+
+it('DELETE /api/products', async function () {
+    const res = await request(app)
+        .delete(`/api/products/${productId}` )
+        .send();
+    expect(res.statusCode).toBe(200);
+});
+
+it('DELETE id doesnt exit /api/products/:productId', async function () {
+    const res = await request(app)
+        .delete("/api/products/123123123123")
+        .send();
+    expect(res.statusCode).toBe(404);
 });
 ```
