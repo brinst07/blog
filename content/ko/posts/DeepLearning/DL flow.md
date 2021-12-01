@@ -1,9 +1,13 @@
 ---
 author: "brinst"
-title: "DeepLearning의 흐름"
+title: "DLI-01,02"
 date: 2021-11-17T22:39:24+09:00
 draft: false
 ---
+## DLI
+회사에서 nvidia DLI를 수료할수 있는 기회를 줘서 관련 교육을 받게 되었다.
+해당 교육을 받고 내용을 정리하는 글이다.
+
 ## 데이터 전처리
 
 ### 1. 모델에 대한 이미지 입력을 단순화하기 위해 이미지 데이터를 평평하게 만든다.
@@ -151,3 +155,109 @@ Epoch 5/5
 compile 시에 merics=['accuracy'] 추적 옵션을 넣었기에 다음과 같이 accuracy가 출력되는 것을 확인 할 수 있다.
 
 val_는 검증데이터에 대한 출력 값이다.
+
+## Test
+### optimizer 사용
+![label](/images/content/optimizer.png)
+epochs을 적게 줘도 loss가 낮음 : 15
+
+많이 사용하는 optimizer는 Adm, RMSProp이라고 한다. 하지만 아래예제에서는 다른 optimizer를 사용해도 로스율이 높음. (그래도 안쓰는 것보다는 효율이 훨씬 잘나온다. Adam는 3500정도에 최저 로스를 찍음)
+
+즉, 해당 예제에서는 SGD가 최적화되어있는 것 같음.
+
+SADAdam과 RMSProp는 어느정도 복잡한 알고리즘에 잘 맞는 옵티마이저인데 하단의 예제가 너무 간단해서 효율이 잘 안나올수도 있다고 한다.
+
+```python
+import numpy as np
+from numpy.polynomial.polynomial import polyfit
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+m = -2  # -2 to start, change me please
+b = 40  # 40 to start, change me please
+
+# Sample data
+x = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+y = np.array([10, 20, 25, 30, 40, 45, 40, 50, 60, 55])
+
+tf.model = tf.keras.Sequential()
+tf.model.add(tf.keras.layers.Dense(units=1, input_shape=([1])))
+# 세부적인 학습을 위해 보통 0.01을 준다.
+sgd = tf.keras.optimizers.SGD(lr=0.01)
+tf.model.compile(loss='mse', optimizer=sgd)
+tf.model.summary()
+model = tf.model.fit(x, y, epochs=500, verbose=1)
+m = tf.model.get_weights()[0][0]
+b = tf.model.get_weights()[1][0]
+y_hat = x * m + b
+plt.plot(x, tf.model.predict(x), label='x값')
+plt.plot(x, y, '.')
+plt.plot(x, y_hat, '-')
+plt.show()
+
+print("Loss:", np.sum((y - y_hat) ** 2) / len(x))
+```
+
+### optimizer 설정없이 구하는 방법
+
+epochs을 10000을 줬음에도 sgd를 사용할때보다 loss가 높음(20~25)
+
+```python
+import numpy as np
+from numpy.polynomial.polynomial import polyfit
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+m = -2  # -2 to start, change me please
+b = 40  # 40 to start, change me please
+
+# Sample data
+x = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+y = np.array([10, 20, 25, 30, 40, 45, 40, 50, 60, 55])
+
+tf.model = tf.keras.Sequential()
+# tf.model.add(tf.keras.layers.Dense(units=1, input_shape=([1])))
+# sgd = tf.keras.optimizers.SGD(lr=0.01)
+X = tf.keras.layers.Input(shape=[1])
+Y = tf.keras.layers.Dense(1)(X)
+tf.model = tf.keras.models.Model(X, Y)
+tf.model.compile(loss='mse')
+tf.model.summary()
+model = tf.model.fit(x, y, epochs=10000, verbose=1)
+m = tf.model.get_weights()[0][0]
+b = tf.model.get_weights()[1][0]
+print(m, b)
+y_hat = x * m + b
+plt.plot(x, tf.model.predict(x), label='값')
+plt.plot(x, y, '.')
+plt.plot(x, y_hat, '-')
+plt.show()
+
+print("Loss:", np.sum((y - y_hat) ** 2) / len(x))
+```
+
+### polyfit을 사용해서 구하는 방법
+
+가장 간단한 방법 loss : 14
+
+```python
+import numpy as np
+from numpy.polynomial.polynomial import polyfit
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+m = -2  # -2 to start, change me please
+b = 40  # 40 to start, change me please
+
+# Sample data
+x = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+y = np.array([10, 20, 25, 30, 40, 45, 40, 50, 60, 55])
+
+m,b = np.polyfit(x, y, 1)
+y_hat = x * m + b
+plt.plot(x, y, '.')
+plt.plot(x, y_hat, '-')
+plt.show()
+
+print("Loss:", np.sum((y - y_hat) ** 2) / len(x))
+```

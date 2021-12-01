@@ -66,3 +66,47 @@ tf.__version__
 ```
 
 [[파이썬] Tensorflow 2.0 session / placeholder 오류 해결 방법](https://eclipse360.tistory.com/40)
+
+# Install Tensorflow-GPU
+기존 맥북 같은 경우는 tensorflow-gpu를 활성해주지 않았다.(gpu가 amd기 때문에...)
+하지만 애플이 M1를 직접 제작하게 되면서, gpu를 지원해주려는 노력을 하고있다....
+다음 과정을 따라하면 m1에서도 gpu를 활성화하여 tensorflow를 돌릴수 있다.
+
+### conda install
+https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh
+위의 링크에서 파일을 받고 다음과정으로 설치를 진행한다.
+
+```bash
+chmod +x ~/Downloads/Miniforge3-MacOSX-arm64.sh
+sh ~/Downloads/Miniforge3-MacOSX-arm64.sh
+source ~/miniforge3/bin/activate
+```
+이 후 원하는 환경을 만들어 activation 해준후 다음과정을 진행한다.
+
+
+### install the tensorflow dependencies
+```bash
+conda install -c apple tensorflow-deps
+```
+
+### tensorflow version upgrade
+```bash
+# uninstall existing tensorflow-macos and tensorflow-metal
+python -m pip uninstall tensorflow-macos
+python -m pip uninstall tensorflow-metal
+# Upgrade tensorflow-deps
+conda install -c apple tensorflow-deps --force-reinstall
+# or point to specific conda environment
+conda install -c apple tensorflow-deps --force-reinstall -n my_env
+```
+
+### install base Tensorflow
+```bash
+python -m pip install tensorflow-macos
+```
+
+### install tensorflow-metal plugin
+```bash
+python -m pip install tensorflow-metal
+```
+
